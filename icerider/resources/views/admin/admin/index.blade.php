@@ -71,6 +71,9 @@
                             <label for="province">所属城市</label>
                             <select class="form-control" id="province" >
                                 <option value="请选择所属城市">请选择所属城市</option>
+                                @foreach($city as $city_val)
+                                    <option value="{{$city_val['bianhao']}}">{{$city_val['address']}}</option>
+                                @endforeach
                             </select>
                         </div>
                     </div>
@@ -79,6 +82,9 @@
                             <label for="subordinatecompanies">所属公司</label>
                             <select class="form-control" id="subordinatecompanies" >
                                 <option value="请选择所属公司">请选择所属公司</option>
+                                @foreach($filiale as $fili_val)
+                                    <option value="{{$fili_val['id']}}">{{$fili_val['filiale']}}</option>
+                                @endforeach
                             </select>
                         </div>
                         <div class="form-group">
@@ -118,22 +124,28 @@
                 </tr>
                 </thead>
                 <tbody>
+                @foreach($admin as $admin_val)
                 <tr>
                     <td>
                         <input type="checkbox">
                     </td>
-                    <td>1</td>
-                    <td>张三</td>
-                    <td>3000</td>
-                    <td>华北大区</td>
-                    <td>中集冷云河北分公司</td>
-                    <td>河北省</td>
-                    <td>唐山市</td>
-                    <td>运营</td>
-                    <td>盛春那</td>
-                    <td>2017-11-22 13:42:39</td>
+                    <td>{{$admin_val['id']}}</td>
+                    <td>{{$admin_val['true_name']}}</td>
+                    <td>{{$admin_val['username']}}</td>
+                    <td>{{$admin_val['area']}}</td>
+                    <td>{{$admin_val['company']}}</td>
+                    <td>{{$admin_val['province']}}</td>
+                    <td>{{$admin_val['city']}}</td>
+                    <td>{{$admin_val['position']}}</td>
+                    <td>{{$admin_val['entering']}}</td>
+                    <td>{{$admin_val['entering_time']}}</td>
+                    @if($admin_val['status']==0)
                     <td>禁用</td>
+                        @else
+                        <td>启用</td>
+                    @endif
                 </tr>
+                @endforeach
                 </tbody>
             </table>
         </div>
@@ -301,6 +313,7 @@
     <script type="text/javascript" src="../js/jquery.pagination.js"></script>
 </scrip>
 <script type="text/javascript">
+    //获取城市
     $('#Subordinate').on('change',function(){
         _this=$(this);
         var bianhao = _this.val();
@@ -312,6 +325,8 @@
             dataType:'json',
             success: function(msg){
                 var province = $('#province');
+                province.children().remove();
+                province.append('<option value="0">请选择所属城市</option>')
                 $.each(msg,function(k,v){
                     str = '<option value="'+ v.bianhao+'">'+ v.address+'</option>'
                     province.append(str)
