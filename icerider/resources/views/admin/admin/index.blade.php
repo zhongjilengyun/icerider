@@ -34,15 +34,15 @@
             位置：
         </div>
         <div class="buttons">
-            <button type="button" class="btn btn-primary"  data-toggle="modal" data-target="#StartUsing" >启用</button>
-            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#forbidden">禁用</button>
+            <button type="button" class="btn btn-primary editStatus" opt="1"  data-toggle="modal" >启用</button>
+            <button type="button" class="btn btn-primary editStatus" opt="0" data-toggle="modal" >禁用</button>
             <a href="{{url('admin/adminCreate')}}">
                 <button type="button" class="btn btn-primary">添加</button>
             </a>
             <a href="editUser.html">
                 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#EditAddjurisdiction">修改</button>
             </a>
-            <button type="button" class="btn btn-primary"  data-toggle="modal" data-target="#delModeljurisdiction">删除</button>
+            <button type="button" class="btn btn-primary"  data-toggle="modal" id="del" url="/admin/adminDel">删除</button>
         </div>
         <div>
             <form class="form-inline">
@@ -127,13 +127,13 @@
                 @foreach($admin as $admin_val)
                 <tr>
                     <td>
-                        <input type="checkbox">
+                        <input type="checkbox" class="id" opt="{{$admin_val['id']}}">
                     </td>
                     <td>{{$admin_val['id']}}</td>
                     <td>{{$admin_val['true_name']}}</td>
                     <td>{{$admin_val['username']}}</td>
-                    <td>{{$admin_val['area']}}</td>
-                    <td>{{$admin_val['company']}}</td>
+                    <td>{{$admin_val['area_id']}}</td>
+                    <td>{{$admin_val['company_id']}}</td>
                     <td>{{$admin_val['province']}}</td>
                     <td>{{$admin_val['city']}}</td>
                     <td>{{$admin_val['position']}}</td>
@@ -315,6 +315,7 @@
     <script src="../js/BootstrapMenu.min.js"></script><!--基于Bootstrap的jQuery右键上下文菜单插件-->
     <script type="text/javascript" src="../js/jquery.pagination.js"></script>
 </scrip>
+@include('admin.base')
 <script type="text/javascript">
     //获取城市
     $('#Subordinate').on('change',function(){

@@ -23,8 +23,8 @@
         </div>
         <div class="buttons">
             <button type="button" class="btn btn-primary"  data-toggle="modal" data-target="#Addjurisdiction" >添加</button>
-            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#EditAddjurisdiction">修改</button>
-            <button type="button" class="btn btn-primary"  data-toggle="modal"  data-target="#delModeljurisdiction" >删除</button>
+            <button type="button" class="btn btn-primary"  data-toggle="modal" id="upd">修改</button>
+            <button type="button" class="btn btn-primary" data-toggle="modal" id="del" url="/admin/positionDel">删除</button>
         </div>
         <div class="table-responsive">
             <table class="table table-bordered table-hover">
@@ -39,20 +39,20 @@
                 </tr>
                 </thead>
                 <tbody>
+                @foreach($position as $posi_val)
                 <tr>
-                    <td><input type="checkbox"></td>
-                    <td>1</td>
-                    <td>区域总监</td>
-                    <td>盛春娜</td>
+                    <td><input type="checkbox" opt="{{$posi_val['id']}}" class="id"></td>
+                    <td>{{$posi_val['id']}}</td>
+                    <td>{{$posi_val['position']}}</td>
+                    <td>{{$posi_val['enter_name']}}</td>
+                    <td>{{$posi_val['enter_time']}}</td>
                     <td>
-                        2017-07-24 16:04:18
-                    </td>
-                    <td>
-                        <a href="distribution.html">
+                        <a href="/admin/positionAuth?position={{$posi_val['position']}}">
                             <button ng-click="delUser()" class="btn btn-danger btn-xs">分配权限</button>
                         </a>
                     </td>
                 </tr>
+                @endforeach
                 </tbody>
             </table>
         </div>
@@ -102,17 +102,17 @@
                 <h4 class="modal-title">添加职务</h4>
             </div>
             <div class="modal-body">
-                <form class="form-horizontal" role="form">
+                <form class="form-horizontal" role="form" action="{{url('admin/positionAdd')}}">
                     <div class="form-group">
                         <label for="menuName" class="col-sm-2 control-label">职务名：</label>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control" id="menuName">
+                            <input type="text" class="form-control" id="menuName" name="position">
                         </div>
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
-                <a  onclick="urlSubmit()" class="btn btn-primary" data-dismiss="modal">提交</a>
+                <a  onclick="urlSubmit(this)" class="btn btn-primary" data-dismiss="modal">提交</a>
                 <button type="button"  class="btn btn-primary" data-dismiss="modal">取消</button>
             </div>
         </div><!-- /.modal-content -->
@@ -128,17 +128,19 @@
                 <h4 class="modal-title">修改职务</h4>
             </div>
             <div class="modal-body">
-                <form class="form-horizontal" role="form">
+                <form class="form-horizontal" role="form" action="{{url('admin/positionUpdate')}}">
                     <div class="form-group">
                         <label for="editmenuName" class="col-sm-2 control-label">职务名：</label>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control" id="editmenuName">
+                            <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                            <input type="hidden" name="id" id="up_id">
+                            <input type="text" class="form-control" id="position_up" name="position">
                         </div>
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
-                <a  onclick="urlSubmit()" class="btn btn-primary" data-dismiss="modal">提交</a>
+                <a  onclick="urlSubmit(this)" class="btn btn-primary" data-dismiss="modal">提交</a>
                 <button type="button"  class="btn btn-primary" data-dismiss="modal">取消</button>
             </div>
         </div><!-- /.modal-content -->
@@ -153,11 +155,51 @@
     <script src="../js/BootstrapMenu.min.js"></script><!--基于Bootstrap的jQuery右键上下文菜单插件-->
     <script type="text/javascript" src="../js/jquery.pagination.js"></script>
 </scrip>
+@include('admin.base')
 <script type="text/javascript">
 
     $(document).ready(function() {
         $("#Pagination").pagination("15");
     });
+
+
+    $(document).on('click','#upd',function(){
+        var is_del = confirm('您确定要修改吗？');
+        if(is_del==false){
+            return;
+        }
+        var region = $('.id');
+        var str="";
+        $.each(region,function(k,v){
+            if(v.checked){
+//                console.log(v);
+                var id = $(v).attr('opt');
+                str+=','+id;
+            }
+        })
+        if(str.lastIndexOf(',')>0){
+            alert('只能选择一个');
+            return;
+        }
+        if(str==""){
+            alert('请选择大区！');
+            return;
+        }
+        var ids = str.substr(1)
+        $.ajax({
+            url:'/admin/positionUpd', //你的路由地址
+            type:"get",
+            data:{id:ids},
+            dataType:'json',
+            success:function(data){
+//                console.log(data)
+                $('#up_id').val(data.id);
+                $('#position_up').val(data.position);
+                $("#EditAddjurisdiction").modal("show"); //显示提示框
+            }
+        });
+
+    })
 
 </script>
 </html>

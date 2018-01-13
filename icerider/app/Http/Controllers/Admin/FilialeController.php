@@ -25,38 +25,43 @@ class FilialeController extends Controller
 
     public function add()
     {
-        $arr['region_name']=Request()->input('region_name');
-
+        $arr =Request()->input();
+        unset($arr['_token']);
         $arr['entering'] = 'liushengjie';
         $arr['enter_time'] = date('Y-m-d H:i:s');
-        $region = new Region();
-        $data = $region->add($arr);
-        return redirect('/admin/regionIndex');
+        $filiale = new Filiale();
+        $data = $filiale->add($arr);
+        return redirect('/admin/filialeIndex');
 
     }
 
     public function del(){
         $str = Input::get('id');
         $ids = explode(',',$str);
-        $region = new Region();
+        $region = new Filiale();
         echo $region->del($ids);
     }
 
     public function upd()
     {
         $id = Input::get('id');
-        $region = new Region();
-        $data = $region->one([['id',$id]]);
+        $region = new Filiale();
+        $data['filiale'] = $region->one([['id',$id]]);
+        $data['region'] = $this->getRegion();
+        $data['province'] = $this->getProvince(false);
+        $data['city'] = $this->getCity();
         echo json_encode($data);
     }
 
     public function update()
     {
-        $id = Request()->input('region_id');
-        $arr['region_name'] = Request()->input('region_name');
-        $region = new Region();
+        $arr = Request()->input();
+        unset($arr['_token']);
+        $id = $arr['filiale_id'];
+        unset($arr['filiale_id']);
+        $region = new Filiale();
         $data = $region->upd(['id'=>$id],$arr);
-        return redirect('/admin/regionIndex');
+        return redirect('/admin/filialeIndex');
     }
 
     public function getRegion(){
@@ -87,6 +92,7 @@ class FilialeController extends Controller
         }
     }
 
+
     /**
      * 获取城市
      * @return array
@@ -99,8 +105,22 @@ class FilialeController extends Controller
     }
 
     public function getFiliale(){
-        $region = new Filiale();
-        $data = $region->read();
+        $filiale = new Filiale();
+        $address = new Address();
+        $region = new Region();
+        $data = $filiale->read();
+
+        foreach($data as $key=>$val){
+            $provinceWhere = [['bianhao',$val['province']]];
+            $cityWhere = [['bianhao',$val['city']]];
+            $regionWhere = [['id',$val['region']]];
+            $province = $address->one($provinceWhere);
+            $city = $address->one($cityWhere);
+            $region1 = $region->one($regionWhere);
+            $data[$key]['province'] = $province['address'];
+            $data[$key]['city'] = $city['address'];
+            $data[$key]['region'] = $region1['region_name'];
+        }
         return $data;
     }
 

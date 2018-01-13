@@ -13,6 +13,7 @@ use App\models\Address;
 use App\models\City;
 use App\models\Rank;
 use App\models\Menu;
+use DB;
 
 class AdminController extends Controller
 {
@@ -46,6 +47,34 @@ class AdminController extends Controller
         $data['menu'] = $this->getMenu();
 
         return view('admin/admin/create',$data);
+    }
+
+    public function add()
+    {
+        $arr =Request()->input();
+        unset($arr['_token']);
+        $arr['entering'] = 'liushengjie';
+        $arr['entering_time'] = date('Y-m-d H:i:s');
+        $arr['status'] = 0;
+        $admin = new Admin();
+        $data = $admin->add($arr);
+        return redirect('/admin/adminIndex');
+    }
+
+    public function del(){
+        $str = Input::get('id');
+        $ids = explode(',',$str);
+        $region = new Admin();
+        echo $region->del($ids);
+    }
+
+    public function editStatus()
+    {
+        $str = Input::get('id');
+        $ids = explode(',',$str);
+        $status = Input::get('status');
+        $row = DB::table('admin')->whereIn('id',$ids)->update(array('status'=>$status));
+        return $row;
     }
 
     public function getMenu(){
@@ -106,13 +135,6 @@ class AdminController extends Controller
         return $data;
     }
 
-    public function getAdmin()
-    {
-        $region = new Admin();
-        $data = $region->read();
-        return $data;
-    }
-
     public function getPosition()
     {
         $region = new Position();
@@ -124,6 +146,35 @@ class AdminController extends Controller
     {
         $rank = new Rank();
         return $rank->read();
+    }
+
+    public function getAdmin(){
+        $admin = new Admin();
+        $filiale = new Filiale();
+        $address = new Address();
+        $region = new Region();
+        $position = new Position();
+        $data = $admin->read();
+
+        foreach($data as $key=>$val){
+            $provinceWhere = [['bianhao',$val['province']]];
+            $cityWhere = [['bianhao',$val['city']]];
+            $regionWhere = [['id',$val['area_id']]];
+            $filialeWhere = [['id',$val['company_id']]];
+            $positionWhere = [['id',$val['position']]];
+            $province = $address->one($provinceWhere);
+            $city = $address->one($cityWhere);
+            $area = $region->one($regionWhere);
+            $company = $filiale->one($filialeWhere);
+            $position1 = $position->one($positionWhere);
+            $data[$key]['province'] = $province['address'];
+            $data[$key]['city'] = $city['address'];
+            $data[$key]['area_id'] = $area['region_name'];
+            $data[$key]['company_id'] = $company['filiale'];
+            $data[$key]['position'] = $position1['position'];
+
+        }
+        return $data;
     }
 
 }

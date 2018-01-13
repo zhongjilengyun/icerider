@@ -25,4 +25,16 @@ class Menu extends Base
         }
         return $menu;
     }
+
+    public function readAuth($pid=0)
+    {
+        $menu = $this->readWhere([['pid',$pid]]);
+        if(empty($menu)){
+            return $menu;
+        }
+        foreach($menu as $key=>$value) {
+            $menu[$key]['son'] = $this->readAuth($value['id']);
+        }
+        return $menu;
+    }
 }

@@ -47,7 +47,7 @@
                 <tbody>
                 @foreach($region as $region_val)
                 <tr>
-                    <td><input type="checkbox" class="region_id" opt="{{$region_val['id']}}"></td>
+                    <td><input type="checkbox" class="id" opt="{{$region_val['id']}}"></td>
                     <td>{{$region_val['id']}}</td>
                     <td>{{$region_val['region_name']}}</td>
                     <td>总部</td>
@@ -175,7 +175,7 @@
             return;
         }
         var url = $(this).attr('url');
-        var region = $('.region_id');
+        var region = $('.id');
         var str="";
         $.each(region,function(k,v){
             if(v.checked){
