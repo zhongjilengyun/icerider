@@ -215,6 +215,8 @@
     <script type="text/javascript" src="js/jquery.pagination.js"></script>
 </scrip>
 <script type="text/javascript">
+
+
     $(document).ready(function() {
         $("#Pagination").pagination("15");
 //          sessionStorage.name=$(".qwer").html();
@@ -233,5 +235,8 @@
         var target = $this.attr('data-target') || (href = $this.attr('href')) && href.replace(/.*(?=#[^\s]+$)/, ''); //strip for ie7
         $(target).collapse('toggle');
     })
+
+
+
 </script>
 </html>

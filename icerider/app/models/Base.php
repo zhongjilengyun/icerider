@@ -3,6 +3,7 @@
 namespace App\models;
 
 use Illuminate\Database\Eloquent\Model;
+use DB;
 
 class Base extends Model
 {
@@ -14,23 +15,23 @@ class Base extends Model
     {
         return $this->where($data)->get()->toArray();
     }
-    public function one($key,$val)
+
+    public function one($data)
     {
-        return $this->where($key,$val)->first()->toArray();
+        return $this->where($data)->first()->toArray();
     }
-    public function del($data)//删
-    {
-        $country = $this->where($data);
-        return $country->delete();
+    public function del($id){
+        //删除
+        return DB::table($this->table)->whereIn('id',$id)->delete();
     }
-    public function upd($data,$list,$arr)//改
+
+    public function upd($where,$data)//改
     {
-        $country = $this->where($data,$list);
-        return $country->update($arr);
+        return DB::table($this->table)->where($where)->update($data);
     }
     public function add($data)//增
     {
-        return DB::table('country')->insertGetId($data);
+        return DB::table($this->table)->insertGetId($data);
     }
 
 }

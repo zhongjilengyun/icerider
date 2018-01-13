@@ -88,6 +88,10 @@
                     <div class="col-sm-6">
                         <select name="" id="Users post" class="selectpicker show-tick form-control">
                             <option value="请选择用户职务">请选择用户职务</option>
+                            @foreach($position as $posi_val)
+                                <option value="{{$posi_val['id']}}">{{$posi_val['position']}}</option>
+                            @endforeach
+
                         </select>
                     </div>
                 </div>
@@ -96,6 +100,9 @@
                     <div class="col-sm-6">
                         <select name="" id="IClass" class="selectpicker show-tick form-control">
                             <option value="请选择部门级别">请选择部门级别</option>
+                            @foreach($rank as $rank_val)
+                                <option value="{{$rank_val['id']}}">{{$rank_val['rank']}}</option>
+                            @endforeach
                         </select>
                     </div>
                 </div>
@@ -104,6 +111,9 @@
                     <div class="col-sm-6">
                         <select name="" id="Regions" class="selectpicker show-tick form-control">
                             <option value="请选择部门级别">请选择所属大区</option>
+                            @foreach($region as $regi_val)
+                                <option value="{{$regi_val['id']}}">{{$regi_val['region_name']}}</option>
+                            @endforeach
                         </select>
                     </div>
                 </div>
@@ -112,6 +122,9 @@
                     <div class="col-sm-6">
                         <select name="" id="subordinateCompanie" class="selectpicker show-tick form-control">
                             <option value="请选择所属公司">请选择所属公司</option>
+                            @foreach($filiale as $fili_val)
+                                <option value="{{$fili_val['id']}}">{{$fili_val['filiale']}}</option>
+                            @endforeach
                         </select>
                     </div>
                 </div>
@@ -120,6 +133,9 @@
                     <div class="col-sm-6">
                         <select name="" id="city" class="selectpicker show-tick form-control">
                             <option value="请选择所属省份">请选择所属城市</option>
+                            @foreach($city as $city_val)
+                                <option value="{{$city_val['bianhao']}}">{{$city_val['address']}}</option>
+                            @endforeach
                         </select>
                     </div>
                 </div>
@@ -143,67 +159,25 @@
                     </li>
                     <li class="listTwo">
                         <table class="table-bordered listTable">
+                            @foreach($menu as $menu_val)
                             <tr>
-                                <td style="font-weight: 800"><span>菜单管理</span><input type="checkbox"></td>
+                                <td style="font-weight: 800"><span>{{$menu_val['menu_name']}}</span><input type="checkbox"></td>
                                 <td >
+                                    @foreach($menu_val['son'] as $menu_value)
                                     <table class="table-bordered listTable">
                                         <tr>
-                                            <td><span style="display: flex">菜单添加</span><input type="checkbox"></td>
+                                            <td><span style="display: flex">{{$menu_value['menu_name']}}</span><input type="checkbox"></td>
                                             <td>
-                                                <span style="display: flex">菜单添加<input type="checkbox"></span>
-                                                <span style="display: flex">菜单添加<input type="checkbox"></span>
-                                                <span style="display: flex">菜单添加<input type="checkbox"></span>
+                                                @foreach($menu_value['son'] as $menu_v)
+                                                <span style="display: flex">{{$menu_v['menu_name']}}<input type="checkbox"></span>
+                                                @endforeach
                                             </td>
                                         </tr>
                                     </table>
+                                    @endforeach
                                 </td>
                             </tr>
-                            <tr>
-                                <td style="font-weight: 800"><span>菜单管理</span><input type="checkbox"></td>
-                                <td >
-                                    <table class="table-bordered listTable">
-                                        <tr>
-                                            <td><span style="display: flex">菜单添加</span><input type="checkbox"></td>
-                                            <td>
-                                                <span style="display: flex">菜单添加<input type="checkbox"></span>
-                                                <span style="display: flex">菜单添加<input type="checkbox"></span>
-                                                <span style="display: flex">菜单添加<input type="checkbox"></span>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td><span style="display: flex">菜单添加</span><input type="checkbox"></td>
-                                            <td>
-                                                <span style="display: flex">菜单添加<input type="checkbox"></span>
-                                                <span style="display: flex">菜单添加<input type="checkbox"></span>
-                                                <span style="display: flex">菜单添加<input type="checkbox"></span>
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style="font-weight: 800"><span>菜单管理</span><input type="checkbox"></td>
-                                <td >
-                                    <table class="table-bordered listTable">
-                                        <tr>
-                                            <td><span style="display: flex">菜单添加</span><input type="checkbox"></td>
-                                            <td>
-                                                <span style="display: flex">菜单添加<input type="checkbox"></span>
-                                                <span style="display: flex">菜单添加<input type="checkbox"></span>
-                                                <span style="display: flex">菜单添加<input type="checkbox"></span>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td><span style="display: flex">菜单添加</span><input type="checkbox"></td>
-                                            <td>
-                                                <span style="display: flex">菜单添加<input type="checkbox"></span>
-                                                <span style="display: flex">菜单添加<input type="checkbox"></span>
-                                                <span style="display: flex">菜单添加<input type="checkbox"></span>
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </td>
-                            </tr>
+                            @endforeach
                         </table>
                     </li>
 
@@ -213,7 +187,7 @@
     </div>
     <div class="buttons">
         <button type="button" class="btn btn-primary">确认保存</button>
-        <a href="userManagement.html">
+        <a href="{{url('admin/adminIndex')}}">
             <button type="button" class="btn btn-primary">取消</button>
         </a>
     </div>

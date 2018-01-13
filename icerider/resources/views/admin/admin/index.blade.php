@@ -271,6 +271,9 @@
                         <div class="col-sm-6">
                             <select name="" id="EditRegions" class="selectpicker show-tick form-control">
                                 <option value="请选择部门级别">请选择所属大区</option>
+                                @foreach($region as $reg_val)
+                                    <option value="{{$reg_val['id']}}">{{$reg_val['region_name']}}</option>
+                                @endforeach
                             </select>
                         </div>
                     </div>

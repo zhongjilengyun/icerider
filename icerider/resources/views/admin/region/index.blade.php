@@ -29,8 +29,8 @@
         </div>
         <div class="buttons">
             <button type="button" class="btn btn-primary"  data-toggle="modal" data-target="#Addjurisdiction" >添加</button>
-            <button type="button" class="btn btn-primary"  data-toggle="modal" data-target="#EditAddjurisdiction" >修改</button>
-            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#delModeljurisdiction">删除</button>
+            <button type="button" class="btn btn-primary" id="upd" url="/admin/regionUpd" >修改</button>
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#delModeljurisdiction" id="del" url="/admin/regionDel">删除</button>
         </div>
         <div class="table-responsive">
             <table class="table table-bordered table-hover">
@@ -45,15 +45,16 @@
                 </tr>
                 </thead>
                 <tbody>
+                @foreach($region as $region_val)
                 <tr>
-                    <td><input type="checkbox"></td>
-                    <td>1</td>
-                    <td>华北大区</td>
+                    <td><input type="checkbox" class="region_id" opt="{{$region_val['id']}}"></td>
+                    <td>{{$region_val['id']}}</td>
+                    <td>{{$region_val['region_name']}}</td>
                     <td>总部</td>
-                    <td>盛春娜</td>
-                    <td>2017-11-22 13:42：39</td>
+                    <td>{{$region_val['entering']}}</td>
+                    <td>{{$region_val['enter_time']}}</td>
                 </tr>
-
+                @endforeach
                 </tbody>
             </table>
         </div>
@@ -77,26 +78,25 @@
 
     </div>
 </div>
-
 <!--删除模态框-->
 
-<div class="modal fade" id="delModeljurisdiction">
-    <div class="modal-dialog">
-        <div class="modal-content message_align">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                <h4 class="modal-title">删除</h4>
-            </div>
-            <div class="modal-body">
-                <p>删除成功！</p>
-            </div>
-            <div class="modal-footer">
-                <input type="hidden" id="url"/>
-                <a  onclick="urlSubmit()" class="btn btn-success" data-dismiss="modal">确定</a>
-            </div>
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
+{{--<div class="modal fade" id="delModeljurisdiction">--}}
+    {{--<div class="modal-dialog">--}}
+        {{--<div class="modal-content message_align">--}}
+            {{--<div class="modal-header">--}}
+                {{--<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>--}}
+                {{--<h4 class="modal-title">删除</h4>--}}
+            {{--</div>--}}
+            {{--<div class="modal-body">--}}
+                {{--<p>删除成功！</p>--}}
+            {{--</div>--}}
+            {{--<div class="modal-footer">--}}
+                {{--<input type="hidden" id="url"/>--}}
+                {{--<a  onclick="urlSubmit()" class="btn btn-success" data-dismiss="modal">确定</a>--}}
+            {{--</div>--}}
+        {{--</div><!-- /.modal-content -->--}}
+    {{--</div><!-- /.modal-dialog -->--}}
+{{--</div><!-- /.modal -->--}}
 <!--删除模态框-->
 <!--添加模态框开始-->
 <div class="modal fade" id="Addjurisdiction">
@@ -107,17 +107,18 @@
                 <h4 class="modal-title">添加区域名</h4>
             </div>
             <div class="modal-body">
-                <form class="form-horizontal" role="form">
+                <form class="form-horizontal" role="form" action="{{url('admin/regionAdd')}}" method="post">
                     <div class="form-group">
+                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
                         <label for="menuName" class="col-sm-2 control-label">大区名：</label>
                         <div class="col-sm-6">
-                            <input type="text" class="form-control" id="menuName">
+                            <input type="text" class="form-control" id="menuName" name="region_name">
                         </div>
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
-                <a  onclick="urlSubmit()" class="btn btn-primary" data-dismiss="modal">提交</a>
+                <a  onclick="urlSubmit(this)" class="btn btn-primary" data-dismiss="modal">提交</a>
                 <button type="button"  class="btn btn-primary" data-dismiss="modal">取消</button>
             </div>
         </div><!-- /.modal-content -->
@@ -133,17 +134,19 @@
                 <h4 class="modal-title">修改区域名</h4>
             </div>
             <div class="modal-body">
-                <form class="form-horizontal" role="form">
+                <form class="form-horizontal" role="form" action="{{url('admin/regionUpdate')}}" method="post" id="edit">
                     <div class="form-group">
+                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                        <input type="hidden" name="region_id" id="up_id">
                         <label for="EditmenuName" class="col-sm-2 control-label">大区名：</label>
                         <div class="col-sm-6">
-                            <input type="text" class="form-control" id="EditmenuName">
+                            <input type="text" class="form-control" id="EditmenuName" name="region_name">
                         </div>
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
-                <a  onclick="urlSubmit()" class="btn btn-primary" data-dismiss="modal">提交</a>
+                <a  onclick="urlSubmit(this)" class="btn btn-primary" data-dismiss="modal">提交</a>
                 <button type="button"  class="btn btn-primary" data-dismiss="modal">取消</button>
             </div>
         </div><!-- /.modal-content -->
@@ -158,11 +161,54 @@
     <script src="../js/BootstrapMenu.min.js"></script><!--基于Bootstrap的jQuery右键上下文菜单插件-->
     <script type="text/javascript" src="../js/jquery.pagination.js"></script>
 </scrip>
+@include('admin.base')
 <script type="text/javascript">
 
     $(document).ready(function() {
         $("#Pagination").pagination("15");
     });
+
+
+    $(document).on('click','#upd',function(){
+        var is_del = confirm('您确定要修改吗？');
+        if(is_del==false){
+            return;
+        }
+        var url = $(this).attr('url');
+        var region = $('.region_id');
+        var str="";
+        $.each(region,function(k,v){
+            if(v.checked){
+//                console.log(v);
+                var id = $(v).attr('opt');
+                str+=','+id;
+            }
+        })
+        if(str.lastIndexOf(',')>0){
+            alert('只能选择一个');
+            return;
+        }
+        if(str==""){
+            alert('请选择大区！');
+            return;
+        }
+        var ids = str.substr(1)
+        $.ajax({
+            url:url, //你的路由地址
+            type:"get",
+            data:{id:ids},
+            dataType:'json',
+            success:function(data){
+//                console.log(data)
+                $('#up_id').val(data.id);
+                $('#EditmenuName').val(data.region_name);
+                $("#EditAddjurisdiction").modal("show"); //显示提示框
+            }
+        });
+
+    })
+
+
 
 </script>
 </html>

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\models\Filiale;
+use App\models\Position;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Input;
@@ -10,6 +11,8 @@ use App\models\Admin;
 use App\models\Region;
 use App\models\Address;
 use App\models\City;
+use App\models\Rank;
+use App\models\Menu;
 
 class AdminController extends Controller
 {
@@ -24,6 +27,7 @@ class AdminController extends Controller
         $data['city'] = $this->getCity();
         $data['filiale'] = $this->getFiliale();
         $data['admin'] = $this->getAdmin();
+
         return view('admin/admin/index',$data);
     }
 
@@ -33,7 +37,21 @@ class AdminController extends Controller
      */
     public function create()
     {
-        return view('admin/admin/create');
+        $data['region'] = $this->getRegion(false);
+        $data['province'] = $this->getProvince(false);
+        $data['city'] = $this->getCity();
+        $data['filiale'] = $this->getFiliale();
+        $data['position'] = $this->getPosition();
+        $data['rank'] = $this->getRank();
+        $data['menu'] = $this->getMenu();
+
+        return view('admin/admin/create',$data);
+    }
+
+    public function getMenu(){
+        $region = new Menu();
+        $data = $region->readMenu();
+        return $data;
     }
 
     /**
@@ -100,6 +118,12 @@ class AdminController extends Controller
         $region = new Position();
         $data = $region->read();
         return $data;
+    }
+
+    public function getRank()
+    {
+        $rank = new Rank();
+        return $rank->read();
     }
 
 }

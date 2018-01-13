@@ -35,3 +35,8 @@ Route::any('admin/regionIndex','Admin\RegionController@index');
 
 Route::any('admin/getProvince','Admin\AdminController@getProvince');
 
+Route::any('admin/regionAdd','Admin\RegionController@add');
+Route::any('admin/regionDel','Admin\RegionController@del');
+Route::any('admin/regionUpd','Admin\RegionController@upd');
+Route::any('admin/regionUpdate','Admin\RegionController@update');
+

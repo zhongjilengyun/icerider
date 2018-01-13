@@ -39,6 +39,9 @@
                             <label for="filiale" >分公司名称</label>
                             <select class="form-control" id="filiale" >
                                 <option value="请选择分公司名称">请选择分公司名称</option>
+                                @foreach($filiale as $fili_val)
+                                    <option value="{{$fili_val['filiale']}}">{{$fili_val['filiale']}}</option>
+                                @endforeach
                             </select>
                         </div>
                         <div class="form-group"   style="margin-left: 40px;">
@@ -55,18 +58,27 @@
                             <label for="Region">所属大区</label>
                             <select class="form-control" id="Region" >
                                 <option value="请选择所属大区">请选择所属大区</option>
+                                @foreach($region as $regi_val)
+                                    <option value="{{$regi_val['region_name']}}">{{$regi_val['region_name']}}</option>
+                                @endforeach
                             </select>
                         </div>
                         <div class="form-group" style="margin-left: 60px;">
                             <label for="provincevarchar">所在省份</label>
                             <select class="form-control" id="provincevarchar" >
                                 <option value="请选择所属大区">请选择所在省份</option>
+                                @foreach($province as $pro_val)
+                                    <option value="{{$pro_val['bianhao']}}">{{$pro_val['address']}}</option>
+                                @endforeach
                             </select>
                         </div>
                         <div class="form-group" style="margin-left:100px;">
                             <label for="citys">所在城市</label>
                             <select class="form-control" id="citys" >
-                                <option value="请选择所属大区">请选择所在省份</option>
+                                <option value="请选择所属城市">请选择所在城市</option>
+                                @foreach($city as $city_val)
+                                    <option value="{{$city_val['bianhao']}}">{{$city_val['address']}}</option>
+                                @endforeach
                             </select>
                             <button class="btn btn-primary" style=" margin-left: 100px;">搜索</button>
                         </div>
@@ -91,19 +103,20 @@
                 </tr>
                 </thead>
                 <tbody>
+                @foreach($filiale as $fili_value)
                 <tr>
                     <td><input type="checkbox"></td>
-                    <td>1</td>
-                    <td>华北大区</td>
-                    <td>总部</td>
-                    <td>盛春娜</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td data-toggle="collapse" data-target="#details">详情
-                    </td>
+                    <td>{{$fili_value['id']}}</td>
+                    <td>{{$fili_value['filiale']}}</td>
+                    <td>{{$fili_value['region']}}</td>
+                    <td>{{$fili_value['province']}}</td>
+                    <td>{{$fili_value['city']}}</td>
+                    <td>{{$fili_value['address']}}</td>
+                    <td>{{$fili_value['principal']}}</td>
+                    <td>{{$fili_value['principal_tel']}}</td>
+                    <td data-toggle="collapse" data-target="#details">详情</td>
                 </tr>
+                @endforeach
                 </tbody>
             </table>
         </div>
@@ -327,6 +340,29 @@
     <script type="text/javascript" src="../js/jquery.pagination.js"></script>
 </scrip>
 <script type="text/javascript">
+
+    $('#provincevarchar').on('change',function(){
+        _this=$(this);
+        var bianhao = _this.val();
+
+        $.ajax({
+            type: "get",
+            url: "/admin/getProvince",
+            data: {bianhao:bianhao},
+            dataType:'json',
+            success: function(msg){
+                var province = $('#citys');
+                province.children().remove();
+                province.append('<option value="0">请选择所属城市</option>')
+                $.each(msg,function(k,v){
+                    str = '<option value="'+ v.address+'" opt="'+ v.bianhao+'">'+ v.address+'</option>'
+                    province.append(str)
+                })
+            }
+        });
+    })
+
+
     $(document).ready(function() {
         $("#Pagination").pagination("15");
     });
