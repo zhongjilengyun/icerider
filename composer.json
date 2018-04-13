@@ -2,13 +2,13 @@
     "name": "iceder/iceder",
     "type": "library",
     "keywords": ["log","logging"],
-    "homepage": "git@github.com:zhongjilengyun/icerider.git",
+    "homepage": "https://github.com/zhongjilengyun/icerider.git",
     "license": "MIT",
     "authors": [
         {
             "name": "1933775887",
             "email": "1933775887qq@sina.com",
-            "homepage": "git@github.com:zhongjilengyun/icerider.git",
+            "homepage": "https://github.com/zhongjilengyun/icerider.git",
             "role": "Developer"
         }
     ],
